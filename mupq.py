@@ -362,7 +362,7 @@ class Converter(object):
         self._processPrimitives("benchmarks/speed/crypto_kem/", "speed", "crypto_kem")
 
         self._subheader("Signature Schemes")
-        self._tablehead(["scheme", "implementation", "key generation [cycles]",
+        self._tablehead(["scheme", "implementation", "key generation [cycles]", "expand_sk [cycles]", "expand_pk [cycles]",
                          "sign [cycles]", "verify [cycles]"])
         self._processPrimitives("benchmarks/speed/crypto_sign/", "speed", "crypto_sign")
 
@@ -453,8 +453,12 @@ class Converter(object):
                 encsign    = int(parts[parts.index("encaps cycles:")+1])
                 decverify    = int(parts[parts.index("decaps cycles:")+1])
             else: # crypto_sign
+                expand_sk   = int(parts[parts.index("expand_sk cycles:")+1])
+                expand_pk   = int(parts[parts.index("expand_pk cycles:")+1])
                 encsign    = int(parts[parts.index("sign cycles:")+1])
                 decverify    = int(parts[parts.index("verify cycles:")+1])
+                
+
         else: # stack
             keygen    = int(parts[parts.index("keypair stack usage:")+1])
             if type_ == "crypto_kem":
@@ -463,14 +467,16 @@ class Converter(object):
             else: # crypto_sign
                 encsign     = int(parts[parts.index("sign stack usage:")+1])
                 decverify   = int(parts[parts.index("verify stack usage:")+1])
-        return [keygen, encsign, decverify]
+        return [keygen, expand_sk, expand_pk, encsign, decverify]
 
     def _formatData(self, scheme, implementation, data, benchmark):
         if benchmark == "speed":
             keygen    = self._formatStats([item[0] for item in data])
-            encsign   = self._formatStats([item[1] for item in data])
-            decverify = self._formatStats([item[2] for item in data])
-            self._row([f"{scheme} ({len(data)} executions)", implementation, keygen, encsign, decverify])
+            expand_sk = self._formatStats([item[1] for item in data])
+            expand_pk = self._formatStats([item[2] for item in data])
+            encsign   = self._formatStats([item[3] for item in data])
+            decverify = self._formatStats([item[4] for item in data])
+            self._row([f"{scheme} ({len(data)} executions)", implementation, keygen, expand_sk, expand_pk,  encsign, decverify])
         elif benchmark == "stack":
             keygen     = self._formatNumber(max([item[0] for item in data]))
             encsign    = self._formatNumber(max([item[1] for item in data]))

@@ -6,6 +6,8 @@
 #include <stdint.h>
 #include <string.h>
 
+#include <mayo.h>
+
 #define MLEN 59
 
 // https://stackoverflow.com/a/1489985/1711232
@@ -48,11 +50,27 @@ int main(void)
     t1 = hal_get_time();
     printcycles("keypair cycles:", t1-t0);
 
+    {
+      sk_t xsk;
+      t0 = hal_get_time();
+      (void) mayo_expand_sk(0, sk, &xsk);
+      t1 = hal_get_time();
+      printcycles("expand_sk cycles:", t1-t0);
+    }
+
     // Signing
     t0 = hal_get_time();
     MUPQ_crypto_sign(sm, &smlen, sm, MLEN, sk);
     t1 = hal_get_time();
     printcycles("sign cycles:", t1-t0);
+
+    {
+      uint32_t xpk[EPK_BYTES_MAX / 4];
+      t0 = hal_get_time();
+      (void) mayo_expand_pk(0, pk, (unsigned char *)xpk);
+      t1 = hal_get_time();
+      printcycles("expand_pk cycles:", t1-t0);
+    }
 
     // Verification
     t0 = hal_get_time();
