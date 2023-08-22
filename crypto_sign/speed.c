@@ -29,6 +29,26 @@
 
 #define printcycles(S, U) send_unsignedll((S), (U))
 
+void bench_expand_sk(unsigned char *sk)
+{
+  unsigned long long t0, t1;
+  sk_t xsk;
+  t0 = hal_get_time();
+  (void) mayo_expand_sk(&MAYO_VARIANT, sk, &xsk);
+  t1 = hal_get_time();
+  printcycles("expand_sk cycles:", t1-t0);
+}
+
+void bench_expand_pk(unsigned char *pk)
+{
+  unsigned long long t0, t1;
+  uint32_t xpk[EPK_BYTES_MAX / 4];
+  t0 = hal_get_time();
+  (void) mayo_expand_pk(&MAYO_VARIANT, pk, (unsigned char *)xpk);
+  t1 = hal_get_time();
+  printcycles("expand_pk cycles:", t1-t0);
+}
+
 int main(void)
 {
   unsigned char sk[MUPQ_CRYPTO_SECRETKEYBYTES];
@@ -50,13 +70,7 @@ int main(void)
     t1 = hal_get_time();
     printcycles("keypair cycles:", t1-t0);
 
-    {
-      sk_t xsk;
-      t0 = hal_get_time();
-      (void) mayo_expand_sk(&MAYO_VARIANT, sk, &xsk);
-      t1 = hal_get_time();
-      printcycles("expand_sk cycles:", t1-t0);
-    }
+    bench_expand_sk(sk);
 
     // Signing
     t0 = hal_get_time();
@@ -64,13 +78,7 @@ int main(void)
     t1 = hal_get_time();
     printcycles("sign cycles:", t1-t0);
 
-    {
-      uint32_t xpk[EPK_BYTES_MAX / 4];
-      t0 = hal_get_time();
-      (void) mayo_expand_pk(&MAYO_VARIANT, pk, (unsigned char *)xpk);
-      t1 = hal_get_time();
-      printcycles("expand_pk cycles:", t1-t0);
-    }
+    bench_expand_pk(pk);
 
     // Verification
     t0 = hal_get_time();
