@@ -34,7 +34,7 @@ void bench_expand_sk(unsigned char *sk)
   unsigned long long t0, t1;
   sk_t xsk;
   t0 = hal_get_time();
-  (void) mayo_expand_sk(&MAYO_VARIANT, sk, &xsk);
+  (void) mayo_expand_sk(0, sk, &xsk);
   t1 = hal_get_time();
   printcycles("expand_sk cycles:", t1-t0);
 }
@@ -44,7 +44,7 @@ void bench_expand_pk(unsigned char *pk)
   unsigned long long t0, t1;
   uint32_t xpk[EPK_BYTES_MAX / 4];
   t0 = hal_get_time();
-  (void) mayo_expand_pk(&MAYO_VARIANT, pk, (unsigned char *)xpk);
+  (void) mayo_expand_pk(0, pk, (unsigned char *)xpk);
   t1 = hal_get_time();
   printcycles("expand_pk cycles:", t1-t0);
 }
