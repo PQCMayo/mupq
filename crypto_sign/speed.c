@@ -1,6 +1,8 @@
+// SPDX-License-Identifier: Apache-2.0 or CC0-1.0
 #include "api.h"
 #include "hal.h"
 #include "sendfn.h"
+#include "randombytes.h"
 
 #include <stdio.h>
 #include <stdint.h>
@@ -73,6 +75,7 @@ int main(void)
     bench_expand_sk(sk);
 
     // Signing
+    randombytes(sm, MLEN);
     t0 = hal_get_time();
     MUPQ_crypto_sign(sm, &smlen, sm, MLEN, sk);
     t1 = hal_get_time();

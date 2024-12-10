@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0 or CC0-1.0
+
 /* Deterministic randombytes by Daniel J. Bernstein */
 /* taken from SUPERCOP (https://bench.cr.yp.to)     */
 
@@ -88,7 +90,7 @@ int main(void)
   unsigned char pk[MUPQ_CRYPTO_PUBLICKEYBYTES];
   unsigned char sendb[MUPQ_CRYPTO_CIPHERTEXTBYTES];
   unsigned char sk_a[MUPQ_CRYPTO_SECRETKEYBYTES];
-  int i,j;
+  unsigned int i,j;
 
   hal_setup(CLOCK_FAST);
 
