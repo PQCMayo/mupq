@@ -44,9 +44,9 @@ void bench_expand_sk(unsigned char *sk)
 void bench_expand_pk(unsigned char *pk)
 {
   unsigned long long t0, t1;
-  uint32_t xpk[EPK_BYTES_MAX / 4];
+  uint64_t xpk[P1_LIMBS_MAX + P2_LIMBS_MAX + P3_LIMBS_MAX] = {0};
   t0 = hal_get_time();
-  (void) mayo_expand_pk(0, pk, (unsigned char *)xpk);
+  (void) mayo_expand_pk(0, pk, xpk);
   t1 = hal_get_time();
   printcycles("expand_pk cycles:", t1-t0);
 }
